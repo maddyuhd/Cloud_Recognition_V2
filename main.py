@@ -22,35 +22,48 @@ fileList1 = sorted(os.listdir(dirName1))
 
 # ------------------------------------------------------------------------------------------------------------
 
+
 def getImgID(s):
     return int((re.findall("\d+", s))[0])
 
+
 def singleInput_serial(input):
-    filename = dirName1 + "/" + input +".jpg"
-    group = match(filename, N,fileList,dirName)
+    filename = dirName1 + "/" + input + ".jpg"
+    group = match(filename, N, fileList, dirName)
     print(filename[-9:], ": ", getImgID(group[0]), getImgID(group[1]), getImgID(group[2]), getImgID(group[3]))
-    
+
     # Accuracy cal
     name = int(filename[-7:-4])
     final_count = 0
     if (name == int(getImgID(group[0])) or name == int(getImgID(group[1])) or name == int(getImgID(group[2])) or name == int(getImgID(group[3]))):
         final_count += 1
-    print "accuracy = {}%".format((final_count ) * 100)
+    # print "accuracy = {}%".format((final_count) * 100)
 
 # ------------------------------------------------------------------------------------------------------------
 
-if __name__ == '__main__':
-    # singleInput_serial("0209")
 
+def main():
     for fname in fileList1:
         filename = dirName1 + "/" + fname
-        group = match(filename, N, dirName)
+        group = match(filename, N, fileList, dirName)
         print(filename[-9:], ": ", getImgID(group[0]), getImgID(group[1]), getImgID(group[2]), getImgID(group[3]))
 # ------------------------------------------------------------------------------------------------------------
         name = int(filename[-7:-4])
+        global final_count
 
         if (name == int(getImgID(group[0])) or name == int(getImgID(group[1])) or name == int(getImgID(group[2])) or name == int(getImgID(group[3]))):
             final_count += 1
     print "accuracy = {}%".format((final_count / float(len(fileList1))) * 100)
+
+
+if __name__ == '__main__':
+    start = t.time()
+    singleInput_serial("0001")
+    # singleInput_serial("0003")
+    # singleInput_serial("0004")
+    # singleInput_serial("0002")
+
+    # main()
+    print "time taken : {}".format(t.time() - start)
 
 # ------------------------------------------------------------------------------------------------------------

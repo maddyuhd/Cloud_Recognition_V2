@@ -9,19 +9,19 @@ import time as t
 
 start =t.time()
 
-with open('filelist.pkl', 'rb') as fid:
+with open('module/filelist.pkl', 'rb') as fid:
     fileList = cPickle.load(fid)
 
-with open('doc.pkl', 'rb') as fid:
+with open('module/doc.pkl', 'rb') as fid:
     doc = cPickle.load(fid)
 
-with open('tree.pkl', 'rb') as fid:
+with open('module/tree.pkl', 'rb') as fid:
     tree = cPickle.load(fid)
 
-with open('nodes.pkl', 'rb') as fid:
+with open('module/nodes.pkl', 'rb') as fid:
     nodes = cPickle.load(fid)
 
-with open('imginleaves.pkl', 'rb') as fid:
+with open('module/imginleaves.pkl', 'rb') as fid:
     imagesInLeaves = cPickle.load(fid)
 
 print("Time To Load : {} seconds".format(t.time()-start))
