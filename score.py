@@ -8,14 +8,15 @@ dirName = 'data/full'
 fileList = sorted(os.listdir(dirName))
 
 split = lambda lst, sz: [lst[i:i + sz] for i in range(0, len(lst), sz)]
-num_theads = min(70, len(fileList))
+num_theads = min(35, len(fileList))
 # print num_theads
+n = 5
 
 
-def lowest_val(d):
+def lowest_val(d, v):
     result = []
 
-    for c in range(0, 4):
+    for c in range(0, v):
         m = min(d, key=d.get)
         result.append(m)
         del d[m]
@@ -28,7 +29,7 @@ def test_results(q, que, fileList_batch, imagesInLeaves, doc, scores):
 
         try:
             work = que.get()
-            print current_thread().name
+            # print current_thread().name
             # print "Work at batch {} ".format(work)
             for file in fileList_batch:
                 img = dirName + "/" + file
@@ -56,19 +57,15 @@ def getScores(q, imagesInLeaves, doc, fileList, dirName):
     data_split = split(fileList, num_theads)
     que = Queue(maxsize=0)
 
-    # print data_split[12 - 1]
-
     # for idx, fname in enumerate(fileList):
     #     que.put((idx, fname))
-    n = 5
 
     for i in xrange(0, len(data_split), n):
 
         if (len(data_split) % n == 0):
-            # print "normal"
             for thr in range(i, i + n):
+                # print "Normal"
                 que.put(thr)
-                print thr
                 Thread(target=test_results, args=(q, que, data_split[thr], imagesInLeaves, doc, scores)).start()
                 que.join()
         else:
@@ -78,12 +75,15 @@ def getScores(q, imagesInLeaves, doc, fileList, dirName):
                     Thread(target=test_results, args=(q, que, data_split[thr], imagesInLeaves, doc, scores)).start()
                     que.join()
             else:
-                for thr in range(i, len(data_split)):
+                for thr in range(i, len(data_split), 2):
                     que.put(thr)
+                    que.put(thr + 1)
+                    # que.put(thr + 2)
                     Thread(target=test_results, args=(q, que, data_split[thr], imagesInLeaves, doc, scores)).start()
+                    Thread(target=test_results, args=(q, que, data_split[thr + 1], imagesInLeaves, doc, scores)).start()
+                    # Thread(target=test_results, args=(q, que, data_split[thr + 2], imagesInLeaves, doc, scores)).start()
                     que.join()
-
-        # que.put(thr)
+        que.join()
 
     # # worker1.setDaemon(True)
     # # worker1.start()
@@ -92,6 +92,4 @@ def getScores(q, imagesInLeaves, doc, fileList, dirName):
     # for eve in scores:
     #     print eve[-8:-4]
 
-    # print "value of 227",scores["data/full/0227.jpg"]
-    # print "value of 272",scores["data/full/0271.jpg"]
-    return lowest_val(scores)
+    return lowest_val(scores, 4)
